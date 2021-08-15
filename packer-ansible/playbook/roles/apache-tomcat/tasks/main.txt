@@ -1,0 +1,57 @@
+
+- name: Install Java 1.6
+  yum: name=java-1.6.0-openjdk state=present
+
+
+- name: create tomcat group
+  group:
+    state: present
+    name: tomcat
+
+- name: create tomcat user
+  user:
+    name: tomcat
+    group: tomcat
+    shell: /bin/false
+    home: /opt/tomcat
+
+- name: create directory for tomcat
+  file:
+    path: /opt/tomcat
+    state: directory
+
+- name: download tomcat package
+  get_url: url=http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.20/bin/apache-tomcat-6.0.20.tar.gz dest='/tmp/'
+
+- name: unarchive tomcat package
+  shell: "tar xzvf /tmp/apache-tomcat-6*tar.gz -C /opt/tomcat --strip-components=1"
+
+- name: change tomcat directory permissions
+  file:
+    path: /opt/tomcat
+    state: directory
+    owner: tomcat
+    group: tomcat
+    recurse: yes
+
+- name: change mode for conf directory
+  file:
+    path: /opt/tomcat/conf
+    state: directory
+    owner: tomcat
+    group: tomcat
+    recurse: yes
+    mode: "g+x"
+
+- name: create systemd service file for tomcat
+  template:
+    src: tomcat.service.j2
+    dest: /etc/systemd/system/tomcat.service
+
+- name: Reload systemd daemon & start tomcat
+  systemd:
+    daemon_reload: yes
+    name: tomcat
+    enabled: yes
+    state: started
+  ignore_errors: yes

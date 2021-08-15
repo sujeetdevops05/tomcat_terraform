@@ -1,0 +1,13 @@
+---
+
+- name: restart apache2
+  service:
+    name: apache2
+    state: restarted
+  ignore_errors: yes
+
+- name: restart tomcat
+  service:
+    name: tomcat
+    state: restarted
+  ignore_errors: yes
