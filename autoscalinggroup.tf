@@ -1,7 +1,7 @@
 provider "aws" {
   region = "ap-southeast-1"
-  access_key = "AKIA3V7OTMU46DIO2MGM"
-  secret_key = "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"
+  access_key = "xxxxxxx"
+  secret_key = "xxxxxxx"
 }
 
 resource "aws_launch_template" "asg-instance" {
